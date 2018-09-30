@@ -14,10 +14,7 @@ import java.util.List;
 import Prak3.Mahasiswa;
 import java.util.ArrayList;
 
-/**
- *
- * @author biobii
- */
+
 public class Serialization {
     
     public static void serialize(List<Mahasiswa> pList, String fileName) {

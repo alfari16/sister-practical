@@ -3,16 +3,23 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package Prak3;
+package Prak4;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
-import Prak3.Mahasiswa;
-import Prak3.Serialization;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.PrintStream;
+import java.net.DatagramPacket;
+import java.net.DatagramSocket;
+import java.net.InetAddress;
+import java.net.SocketException;
+import java.net.UnknownHostException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
-public class Main {
-
+public class Client {
     final String fileName = "./mahasiswa.ser";
     List<Mahasiswa> mahasiswa;
     String nim, nama, asal, kelas, isExit;
@@ -81,21 +88,66 @@ public class Main {
     }
 
     void save() {
-        Serialization.serialize(mahasiswa, fileName);
-        System.out.println("Serialization is done!");
+        try {
+            final int SERVICE_PORT = 2000;
+            final int BUFFSIZE = 256;
+            
+            String hostname = "localhost";
+            InetAddress addr = InetAddress.getByName(hostname);
+            
+            DatagramSocket socket = new DatagramSocket();
+            socket.setSoTimeout(2000);
+            
+            ByteArrayOutputStream bout = new ByteArrayOutputStream();
+            PrintStream pout = new PrintStream(bout);
+            
+            String temp = "";
+            
+            for(Mahasiswa mhs : mahasiswa){
+                temp+=mhs.toString()+"%";
+            }
+            
+            pout.print(temp);
+            System.out.println(temp);
+            
+            byte[] barray = bout.toByteArray();
+            
+            DatagramPacket packet = new DatagramPacket(barray,barray.length, addr, SERVICE_PORT);
+            System.out.println("Saving to "+hostname);
+            socket.send(packet);
+            
+//            byte[] recbuf = new byte[BUFFSIZE];
+            boolean timeout = false;
+            
+            try {
+                socket.receive(packet);
+            }catch(Exception err){
+                timeout = true;
+            }
+            
+            if(!timeout){
+                System.out.println("Data serialized and saved");
+            } else {
+                System.out.println("Saving failed");
+            }
+        } catch(UnknownHostException ex) {
+            ex.printStackTrace();
+        } catch (SocketException ex) {
+            ex.printStackTrace();
+        } catch (IOException ex) {
+            Logger.getLogger(Client.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     public static void main(String[] args) {
         Scanner scn = new Scanner(System.in);
-        Main main = new Main();
+        Client main = new Client();
         String choice;
 
         boolean exit = false;
-
         try {
-            //check saved serialized file
-            main.mahasiswa = Serialization.deserialize(main.fileName);
-        } catch (Exception err) {
+            main.mahasiswa = Server.deserialize("./mahasiswa.ser");
+        }catch(Exception e){
             main.mahasiswa = new ArrayList<Mahasiswa>();
         }
 

@@ -3,8 +3,9 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package Prak3;
+package Prak4;
 
+import Prak3.*;
 import java.io.Serializable;
 
 
@@ -38,4 +39,5 @@ public class Mahasiswa implements Serializable {
     public String toString() {
         return nim + " - " + nama + " - " + asal + " - " + kelas;
     }
+    
 }
