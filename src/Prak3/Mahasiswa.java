@@ -11,6 +11,14 @@ import java.io.Serializable;
 public class Mahasiswa implements Serializable {
     private String nim, nama, asal, kelas;
     
+    /**
+     * Constructor
+     * @param String nim
+     * @param String nama
+     * @param String asal
+     * @param String kelas
+     * @return void
+     */
     public Mahasiswa(String nim, String nama, String asal, String kelas) {
         this.nim = nim;
         this.nama = nama;
@@ -18,18 +26,42 @@ public class Mahasiswa implements Serializable {
         this.kelas = kelas;
     }
     
+    /**
+     * Get NIM
+     *
+     * @param void
+     * @return String
+     */
     public String getNim() {
         return this.nim;
     }
     
+    /**
+     * Get Nama
+     *
+     * @param void
+     * @return String
+     */
     public String getNama() {
         return this.nama;
     }
     
+    /**
+     * Get Asal
+     *
+     * @param void
+     * @return String
+     */
     public String getAsal() {
         return this.asal;
     }
     
+   /**
+    * Get Kelas
+    *
+    * @param void
+    * @return String
+    */
    public String getKelas() {
        return this.kelas;
    }
